@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- blob -->
+  <circle cx="50" cy="50" r="46" fill="#F4C0D1" stroke="#D4537E" stroke-width="4"/>
+  <!-- eyes -->
+  <circle cx="37" cy="44" r="7" fill="#993556"/>
+  <circle cx="63" cy="44" r="7" fill="#993556"/>
+  <!-- mouth -->
+  <path d="M 36 58 Q 50 72 64 58" stroke="#993556" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+</svg>
