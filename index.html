@@ -380,6 +380,31 @@
       morphAnim = requestAnimationFrame(frame);
     }
 
+    // ── Custom cursors ──────────────────────────────────────────
+    function makeCursorURL(inner, w, h) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${inner}</svg>`;
+      return 'data:image/svg+xml,' + encodeURIComponent(svg);
+    }
+    function setCursors(col) {
+      const s = col.border;
+      const arrow = makeCursorURL(
+        `<path d="M 4 2 L 4 24 L 9 19 L 13 28 L 17 26 L 13 17 L 21 17 Z"` +
+        ` fill="white" stroke="${s}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`,
+        28, 30
+      );
+      const hand = makeCursorURL(
+        `<rect x="6" y="1" width="25" height="15" rx="4" fill="white" stroke="${s}" stroke-width="2"/>` +
+        `<rect x="1" y="6" width="7" height="9" rx="3.5" fill="white" stroke="${s}" stroke-width="2"/>` +
+        `<rect x="7" y="14" width="5" height="14" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
+        `<rect x="13" y="14" width="5" height="17" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
+        `<rect x="19" y="14" width="5" height="15" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
+        `<rect x="25" y="14" width="4" height="12" rx="2" fill="white" stroke="${s}" stroke-width="2"/>`,
+        32, 32
+      );
+      document.body.style.cursor = `url("${arrow}") 4 2, auto`;
+      wrap.style.cursor = `url("${hand}") 18 2, pointer`;
+    }
+
     // ── Colour ───────────────────────────────────────────────────
     function applyColor(c) {
       blobPath.style.fill   = c.bg;
@@ -391,6 +416,7 @@
       document.querySelector('.label').style.color = c.count;
       frenzyLabel.style.color = c.count;
       document.body.style.background = prefersDark.matches ? c.darkPage : c.page;
+      setCursors(c);
     }
     prefersDark.addEventListener('change', () => applyColor(colors()[colorIdx]));
 
