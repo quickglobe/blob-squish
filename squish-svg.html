@@ -943,15 +943,14 @@
     }
 
     function updateGenBtns() {
-      genBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === (generation % GEN_PALETTES.length)));
+      genBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === generation));
     }
 
-    const genLabels = ['I','II','III'];
-    genLabels.forEach((label, i) => {
+    for (let i = 0; i < 10; i++) {
       const btn = document.createElement('button');
       btn.className = 'dbg-btn';
-      btn.textContent = label;
-      btn.style.cssText = 'height:26px; padding:0 10px; border-radius:8px;';
+      btn.textContent = i;
+      btn.style.cssText = 'width:26px; height:26px; border-radius:7px;';
       btn.addEventListener('click', () => {
         generation = i;
         applyColor(colors()[colorIdx]);
@@ -959,7 +958,7 @@
         updateGenBtns();
       });
       genBtns.appendChild(btn);
-    });
+    }
 
     document.body.appendChild(debugPanel);
 
