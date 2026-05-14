@@ -379,6 +379,54 @@
     .toggle input:checked + .toggle-track::after {
       transform: translateX(18px);
     }
+
+    /* ── Debug panel ──────────────────────────────────────────── */
+    #debugPanel {
+      background: rgba(10,6,14,0.72);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+    @media (prefers-color-scheme: light) {
+      #debugPanel {
+        background: rgba(255,252,255,0.88);
+        border-color: rgba(0,0,0,0.09);
+        color: #2a1a28;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      }
+    }
+    .dbg-lbl {
+      font: 500 9px/1 monospace;
+      opacity: 0.4;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: 36px;
+    }
+    .dbg-btn {
+      border: 1.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      font: 600 11px/1 monospace;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .dbg-btn:hover  { background: rgba(255,255,255,0.14); }
+    .dbg-btn.active {
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.80);
+    }
+    @media (prefers-color-scheme: light) {
+      .dbg-btn {
+        border-color: rgba(0,0,0,0.14);
+        background: rgba(0,0,0,0.04);
+        color: #2a1a28;
+      }
+      .dbg-btn:hover  { background: rgba(0,0,0,0.08); }
+      .dbg-btn.active {
+        background: rgba(0,0,0,0.10);
+        border-color: rgba(0,0,0,0.50);
+      }
+    }
   </style>
 </head>
 <body>
@@ -858,19 +906,8 @@
     debugPanel.style.cssText = `
       position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
       display:flex; flex-direction:column; align-items:stretch; gap:8px;
-      background:rgba(10,6,14,0.72); backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      border:1px solid rgba(255,255,255,0.10);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
       padding:12px 14px; border-radius:18px;
-      box-shadow:0 4px 24px rgba(0,0,0,0.35);
-      color:#fff;
-    `;
-
-    const dbBtnBase = `
-      border:1.5px solid rgba(255,255,255,0.18);
-      background:rgba(255,255,255,0.07); color:#fff;
-      font:600 11px/1 monospace; cursor:pointer;
-      transition:background 0.12s, border-color 0.12s;
     `;
 
     // Row 1: stage
@@ -879,8 +916,8 @@
     debugPanel.appendChild(row1);
 
     const lbl = document.createElement('span');
+    lbl.className = 'dbg-lbl';
     lbl.textContent = 'stage';
-    lbl.style.cssText = 'font:500 9px/1 monospace; opacity:0.4; text-transform:uppercase; letter-spacing:0.08em; min-width:36px;';
     row1.appendChild(lbl);
 
     const debugBtns = document.createElement('div');
@@ -893,8 +930,8 @@
     debugPanel.appendChild(row2);
 
     const genLbl = document.createElement('span');
+    genLbl.className = 'dbg-lbl';
     genLbl.textContent = 'gen';
-    genLbl.style.cssText = 'font:500 9px/1 monospace; opacity:0.4; text-transform:uppercase; letter-spacing:0.08em; min-width:36px;';
     row2.appendChild(genLbl);
 
     const genBtns = document.createElement('div');
@@ -902,28 +939,19 @@
     row2.appendChild(genBtns);
 
     function updateStageBtns() {
-      debugBtns.querySelectorAll('button').forEach((b, j) => {
-        const active = j === stage;
-        b.style.background = active ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.07)';
-        b.style.borderColor = active ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.18)';
-      });
+      debugBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === stage));
     }
 
     function updateGenBtns() {
-      genBtns.querySelectorAll('button').forEach((b, j) => {
-        const active = j === (generation % GEN_PALETTES.length);
-        b.style.background = active ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.07)';
-        b.style.borderColor = active ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.18)';
-      });
+      genBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === (generation % GEN_PALETTES.length)));
     }
 
     const genLabels = ['I','II','III'];
     genLabels.forEach((label, i) => {
       const btn = document.createElement('button');
+      btn.className = 'dbg-btn';
       btn.textContent = label;
-      btn.style.cssText = dbBtnBase + 'height:26px; padding:0 10px; border-radius:8px;';
-      btn.addEventListener('mouseenter', () => { if (i !== generation % GEN_PALETTES.length) btn.style.background = 'rgba(255,255,255,0.13)'; });
-      btn.addEventListener('mouseleave', () => { if (i !== generation % GEN_PALETTES.length) btn.style.background = 'rgba(255,255,255,0.07)'; });
+      btn.style.cssText = 'height:26px; padding:0 10px; border-radius:8px;';
       btn.addEventListener('click', () => {
         generation = i;
         applyColor(colors()[colorIdx]);
@@ -937,11 +965,10 @@
 
     BLOB_SHAPE_RADII.forEach((radii, i) => {
       const btn = document.createElement('button');
+      btn.className = 'dbg-btn';
       btn.textContent = i;
       btn.title = SHAPE_NAMES[i];
-      btn.style.cssText = dbBtnBase + 'width:26px; height:26px; border-radius:7px;';
-      btn.addEventListener('mouseenter', () => { if (i !== stage) btn.style.background = 'rgba(255,255,255,0.13)'; });
-      btn.addEventListener('mouseleave', () => { if (i !== stage) btn.style.background = 'rgba(255,255,255,0.07)'; });
+      btn.style.cssText = 'width:26px; height:26px; border-radius:7px;';
       btn.addEventListener('click', () => {
         stage = i;
         animateBlob(mutatedRadii(i), 500);
