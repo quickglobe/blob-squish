@@ -399,17 +399,19 @@
         `<path d="M 4 2 L 4 24 L 9 19 L 13 28 L 17 26 L 13 17 L 21 17 Z" fill="white" stroke="${s}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`,
         20, 22, 28, 30
       );
+      // Top-down petting hand: thumb left, palm top, 4 fingers pointing down toward blob.
+      // Paint order: thumb behind palm, palm behind fingers, so joints look natural.
       const hand = makeCursorURL(
-        `<rect x="6" y="17" width="23" height="12" rx="4" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<ellipse cx="5" cy="23" rx="4" ry="5" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="7" y="4" width="5" height="15" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="13" y="1" width="5" height="18" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="19" y="4" width="5" height="15" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="25" y="7" width="4" height="12" rx="2" fill="white" stroke="${s}" stroke-width="2"/>`,
+        `<rect x="1" y="4" width="7" height="8" rx="3.5" fill="white" stroke="${s}" stroke-width="1.5"/>` +
+        `<rect x="5" y="1" width="24" height="13" rx="5"   fill="white" stroke="${s}" stroke-width="1.5"/>` +
+        `<rect x="6"  y="12" width="5" height="14" rx="2.5" fill="white" stroke="${s}" stroke-width="1.5"/>` +
+        `<rect x="12" y="12" width="5" height="17" rx="2.5" fill="white" stroke="${s}" stroke-width="1.5"/>` +
+        `<rect x="18" y="12" width="5" height="14" rx="2.5" fill="white" stroke="${s}" stroke-width="1.5"/>` +
+        `<rect x="24" y="12" width="4" height="10" rx="2"   fill="white" stroke="${s}" stroke-width="1.5"/>`,
         32, 32
       );
       document.body.style.cursor = `url("${arrow}") 3 1, auto`;
-      wrap.style.cursor = `url("${hand}") 15 16, pointer`;
+      wrap.style.cursor = `url("${hand}") 14 28, pointer`;
     }
     function setCursors(col) {
       const newRGB = _hexToRGB(col.border);
@@ -419,7 +421,7 @@
       _cursorAnimStart = performance.now();
       if (_cursorAnimId) cancelAnimationFrame(_cursorAnimId);
       function tick(now) {
-        const t = Math.min(1, (now - _cursorAnimStart) / 500);
+        const t = Math.min(1, (now - _cursorAnimStart) / 150);
         const et = t < 0.5 ? 2*t*t : -1 + (4-2*t)*t;
         _cursorRGB = _cursorFromRGB.map((c,i) => c + (_cursorToRGB[i]-c)*et);
         _buildCursors(_rgbToHex(_cursorRGB[0], _cursorRGB[1], _cursorRGB[2]));
