@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Squish</title>
+  <title>Blob Squish</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -308,6 +308,11 @@
     }
     .info-panel-links a:hover { opacity: 1; text-decoration: underline; }
 
+    .ext-icon { margin-left: 1px; }
+    @media (hover: none) and (pointer: coarse) {
+      .ext-icon { display: none; }
+    }
+
     .info-divider {
       border: none;
       border-top: 1px solid rgba(0,0,0,0.08);
@@ -379,15 +384,12 @@
 <body>
   <button class="info-btn" id="infoBtn" aria-label="About Squish">i</button>
 
-  <div class="info-panel" id="infoPanel" role="dialog" aria-label="About Squish">
-    <div class="info-panel-title" id="infoPanelTitle">Squish</div>
+  <div class="info-panel" id="infoPanel" role="dialog" aria-label="About Blob Squish">
+    <div class="info-panel-title" id="infoPanelTitle">Blob Squish</div>
     <p class="info-panel-desc">A blobby clicker that evolves the more you play. Click the blob, build a frenzy, and watch it morph through generations.</p>
     <div class="info-panel-links">
       <a href="https://github.com/quickglobe/blob-squish" target="_blank" rel="noopener noreferrer">
-        GitHub ↗
-      </a>
-      <a href="https://blob-squish.com" target="_blank" rel="noopener noreferrer">
-        blob-squish.com ↗
+        GitHub<span class="ext-icon" aria-hidden="true"> ↗</span>
       </a>
     </div>
     <hr class="info-divider" />
@@ -849,14 +851,26 @@
     });
 
     // ── Debug panel ──────────────────────────────────────────────
+    const SHAPE_NAMES = ['circle','organic','pear','diagonal','cross','star','crescent','mushroom','alien','8pt star'];
+
     const debugPanel = document.createElement('div');
     debugPanel.id = 'debugPanel';
     debugPanel.style.cssText = `
       position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
-      display:flex; flex-direction:column; align-items:center; gap:6px;
-      background:rgba(0,0,0,0.12); backdrop-filter:blur(6px);
-      padding:8px 12px; border-radius:16px;
-      font-family:monospace; font-size:12px;
+      display:flex; flex-direction:column; align-items:stretch; gap:8px;
+      background:rgba(10,6,14,0.72); backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,0.10);
+      padding:12px 14px; border-radius:18px;
+      box-shadow:0 4px 24px rgba(0,0,0,0.35);
+      color:#fff;
+    `;
+
+    const dbBtnBase = `
+      border:1.5px solid rgba(255,255,255,0.18);
+      background:rgba(255,255,255,0.07); color:#fff;
+      font:600 11px/1 monospace; cursor:pointer;
+      transition:background 0.12s, border-color 0.12s;
     `;
 
     // Row 1: stage
@@ -865,8 +879,8 @@
     debugPanel.appendChild(row1);
 
     const lbl = document.createElement('span');
-    lbl.textContent = 'stage:';
-    lbl.style.cssText = 'opacity:0.5; margin-right:2px;';
+    lbl.textContent = 'stage';
+    lbl.style.cssText = 'font:500 9px/1 monospace; opacity:0.4; text-transform:uppercase; letter-spacing:0.08em; min-width:36px;';
     row1.appendChild(lbl);
 
     const debugBtns = document.createElement('div');
@@ -879,34 +893,37 @@
     debugPanel.appendChild(row2);
 
     const genLbl = document.createElement('span');
-    genLbl.textContent = 'gen:';
-    genLbl.style.cssText = 'opacity:0.5; margin-right:2px;';
+    genLbl.textContent = 'gen';
+    genLbl.style.cssText = 'font:500 9px/1 monospace; opacity:0.4; text-transform:uppercase; letter-spacing:0.08em; min-width:36px;';
     row2.appendChild(genLbl);
 
     const genBtns = document.createElement('div');
     genBtns.style.cssText = 'display:flex; gap:4px;';
     row2.appendChild(genBtns);
 
-    const genNums = ['I','II','III'];
-    function updateGenBtns() {
-      genBtns.querySelectorAll('button').forEach((b, j) => {
-        b.style.borderColor = j === (generation % GEN_PALETTES.length)
-          ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)';
+    function updateStageBtns() {
+      debugBtns.querySelectorAll('button').forEach((b, j) => {
+        const active = j === stage;
+        b.style.background = active ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.07)';
+        b.style.borderColor = active ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.18)';
       });
     }
 
-    genNums.forEach((label, i) => {
+    function updateGenBtns() {
+      genBtns.querySelectorAll('button').forEach((b, j) => {
+        const active = j === (generation % GEN_PALETTES.length);
+        b.style.background = active ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.07)';
+        b.style.borderColor = active ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.18)';
+      });
+    }
+
+    const genLabels = ['I','II','III'];
+    genLabels.forEach((label, i) => {
       const btn = document.createElement('button');
       btn.textContent = label;
-      btn.style.cssText = `
-        height:26px; padding: 0 6px; border-radius:13px;
-        border:2px solid rgba(255,255,255,0.4);
-        background:rgba(255,255,255,0.15); color:inherit;
-        font:700 11px monospace; cursor:pointer;
-        transition:background 0.15s;
-      `;
-      btn.addEventListener('mouseenter', () => btn.style.background = 'rgba(255,255,255,0.35)');
-      btn.addEventListener('mouseleave', () => btn.style.background = 'rgba(255,255,255,0.15)');
+      btn.style.cssText = dbBtnBase + 'height:26px; padding:0 10px; border-radius:8px;';
+      btn.addEventListener('mouseenter', () => { if (i !== generation % GEN_PALETTES.length) btn.style.background = 'rgba(255,255,255,0.13)'; });
+      btn.addEventListener('mouseleave', () => { if (i !== generation % GEN_PALETTES.length) btn.style.background = 'rgba(255,255,255,0.07)'; });
       btn.addEventListener('click', () => {
         generation = i;
         applyColor(colors()[colorIdx]);
@@ -921,25 +938,19 @@
     BLOB_SHAPE_RADII.forEach((radii, i) => {
       const btn = document.createElement('button');
       btn.textContent = i;
-      btn.style.cssText = `
-        width:26px; height:26px; border-radius:50%;
-        border:2px solid rgba(255,255,255,0.4);
-        background:rgba(255,255,255,0.15); color:inherit;
-        font:700 12px monospace; cursor:pointer;
-        transition:background 0.15s;
-      `;
-      btn.addEventListener('mouseenter', () => btn.style.background = 'rgba(255,255,255,0.35)');
-      btn.addEventListener('mouseleave', () => btn.style.background = 'rgba(255,255,255,0.15)');
+      btn.title = SHAPE_NAMES[i];
+      btn.style.cssText = dbBtnBase + 'width:26px; height:26px; border-radius:7px;';
+      btn.addEventListener('mouseenter', () => { if (i !== stage) btn.style.background = 'rgba(255,255,255,0.13)'; });
+      btn.addEventListener('mouseleave', () => { if (i !== stage) btn.style.background = 'rgba(255,255,255,0.07)'; });
       btn.addEventListener('click', () => {
         stage = i;
         animateBlob(mutatedRadii(i), 500);
-        debugBtns.querySelectorAll('button').forEach((b, j) => {
-          b.style.borderColor = j === i ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)';
-        });
+        updateStageBtns();
       });
       debugBtns.appendChild(btn);
     });
 
+    updateStageBtns();
     updateGenBtns();
 
     // Dev mode on by default in squish-svg.html
