@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Squish</title>
-  <meta name="description" content="Squish — the blobby clicker that evolves the more you play." />
-  <meta property="og:title" content="Squish" />
-  <meta property="og:description" content="A blobby clicker that evolves the more you play." />
+  <title>Blob Squish</title>
+  <meta name="description" content="Blob Squish — a squishy blob that evolves the more you play." />
+  <meta property="og:title" content="Blob Squish" />
+  <meta property="og:description" content="A squishy blob that evolves the more you play." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://blob-squish.com/og-image.png" />
   <meta name="theme-color" content="#F4C0D1" />
@@ -213,9 +213,252 @@
     .progress-dot.evolving {
       animation: dotevolve 0.45s ease-out forwards;
     }
+
+    /* ── Info button ──────────────────────────────────────────── */
+    .info-btn {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.08);
+      color: #D4537E;
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 19px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: background 0.15s, transform 0.15s;
+      z-index: 200;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .info-btn:hover  { background: rgba(0,0,0,0.14); transform: scale(1.1); }
+    .info-btn:active { transform: scale(0.95); }
+
+    @media (prefers-color-scheme: dark) {
+      .info-btn { background: rgba(255,255,255,0.10); }
+      .info-btn:hover { background: rgba(255,255,255,0.18); }
+    }
+
+    /* ── Info panel ────────────────────────────────────────────── */
+    .info-panel {
+      position: fixed;
+      top: 58px;
+      left: 14px;
+      width: 240px;
+      background: rgba(255,255,255,0.70);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 18px;
+      padding: 18px 20px 16px;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.11), 0 1px 4px rgba(0,0,0,0.07);
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(-6px) scale(0.97);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .info-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .info-panel {
+        background: rgba(26,17,32,0.76);
+        box-shadow: 0 4px 28px rgba(0,0,0,0.40);
+      }
+    }
+
+    .info-panel-title {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: #D4537E;
+      margin-bottom: 6px;
+      transition: color 0.3s;
+    }
+
+    .info-panel-desc {
+      font-family: sans-serif;
+      font-size: 13px;
+      line-height: 1.55;
+      opacity: 0.68;
+      margin-bottom: 14px;
+    }
+
+    .info-panel-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .info-panel-links a {
+      font-family: sans-serif;
+      font-size: 13px;
+      color: #D4537E;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.85;
+      transition: opacity 0.15s;
+    }
+    .info-panel-links a:hover { opacity: 1; text-decoration: underline; }
+
+    .ext-icon { margin-left: 1px; }
+    @media (hover: none) and (pointer: coarse) {
+      .ext-icon { display: none; }
+    }
+
+    .info-divider {
+      border: none;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      margin-bottom: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      .info-divider { border-top-color: rgba(255,255,255,0.08); }
+    }
+
+    .dev-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .dev-row-label {
+      font-family: sans-serif;
+      font-size: 13px;
+      opacity: 0.78;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      background: rgba(0,0,0,0.14);
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    @media (prefers-color-scheme: dark) {
+      .toggle-track { background: rgba(255,255,255,0.14); }
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+    }
+    .toggle input:checked + .toggle-track {
+      background: var(--theme-color, #D4537E);
+    }
+    .toggle input:checked + .toggle-track::after {
+      transform: translateX(18px);
+    }
+
+    /* ── Debug panel ──────────────────────────────────────────── */
+    #debugPanel {
+      background: rgba(10,6,14,0.72);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+    @media (prefers-color-scheme: light) {
+      #debugPanel {
+        background: rgba(255,252,255,0.88);
+        border-color: rgba(0,0,0,0.09);
+        color: #2a1a28;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      }
+    }
+    .dbg-lbl {
+      font: 500 9px/1 monospace;
+      opacity: 0.4;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: 36px;
+    }
+    .dbg-btn {
+      border: 1.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      font: 600 11px/1 monospace;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .dbg-btn:hover  { background: rgba(255,255,255,0.14); }
+    .dbg-btn.active {
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.80);
+    }
+    @media (prefers-color-scheme: light) {
+      .dbg-btn {
+        border-color: rgba(0,0,0,0.14);
+        background: rgba(0,0,0,0.04);
+        color: #2a1a28;
+      }
+      .dbg-btn:hover  { background: rgba(0,0,0,0.08); }
+      .dbg-btn.active {
+        background: rgba(0,0,0,0.10);
+        border-color: rgba(0,0,0,0.50);
+      }
+    }
   </style>
 </head>
 <body>
+  <button class="info-btn" id="infoBtn" aria-label="About Squish">i</button>
+
+  <div class="info-panel" id="infoPanel" role="dialog" aria-label="About Blob Squish">
+    <div class="info-panel-title" id="infoPanelTitle">Blob Squish</div>
+    <p class="info-panel-desc">A squishy blob that evolves the more you play. Click it, build a frenzy, and watch it morph through generations.</p>
+    <div class="info-panel-links">
+      <a href="https://github.com/quickglobe/blob-squish" target="_blank" rel="noopener noreferrer">
+        GitHub<span class="ext-icon" aria-hidden="true"> ↗</span>
+      </a>
+    </div>
+    <hr class="info-divider" />
+    <div class="dev-row">
+      <label class="dev-row-label" for="devToggle">Developer mode</label>
+      <label class="toggle" aria-label="Toggle developer mode">
+        <input type="checkbox" id="devToggle" />
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+  </div>
+
   <div class="stage">
     <div class="blob-area">
       <div class="blob-wrap" id="blobWrap">
@@ -249,16 +492,21 @@
 
   <script>
     // ── DOM refs ────────────────────────────────────────────────
-    const blob        = document.getElementById('blob');
-    const blobPath    = document.getElementById('blobPath');
-    const svgMouth    = document.getElementById('svgMouth');
-    const shadow      = document.getElementById('shadow');
-    const countEl     = document.getElementById('count');
-    const hint        = document.getElementById('hint');
-    const wrap        = document.getElementById('blobWrap');
-    const frenzyLabel = document.getElementById('frenzyLabel');
-    const genLabel    = document.getElementById('genLabel');
-    const dots        = [0,1,2,3,4].map(i => document.getElementById('dot' + i));
+    const blob           = document.getElementById('blob');
+    const blobPath       = document.getElementById('blobPath');
+    const svgMouth       = document.getElementById('svgMouth');
+    const shadow         = document.getElementById('shadow');
+    const countEl        = document.getElementById('count');
+    const hint           = document.getElementById('hint');
+    const wrap           = document.getElementById('blobWrap');
+    const frenzyLabel    = document.getElementById('frenzyLabel');
+    const genLabel       = document.getElementById('genLabel');
+    const dots           = [0,1,2,3,4].map(i => document.getElementById('dot' + i));
+    const infoBtn        = document.getElementById('infoBtn');
+    const infoPanel      = document.getElementById('infoPanel');
+    const infoPanelTitle = document.getElementById('infoPanelTitle');
+    const infoPanelLinks = infoPanel.querySelector('.info-panel-links');
+    const devToggle      = document.getElementById('devToggle');
 
     // ── Colours — same 6 hues in same order, increasing saturation each gen ──
     const GEN_PALETTES = [
@@ -391,6 +639,11 @@
       document.querySelector('.label').style.color = c.count;
       frenzyLabel.style.color = c.count;
       document.body.style.background = prefersDark.matches ? c.darkPage : c.page;
+      // Info panel theming
+      document.documentElement.style.setProperty('--theme-color', c.border);
+      infoPanelTitle.style.color = c.count;
+      infoPanelLinks.querySelectorAll('a').forEach(a => a.style.color = c.border);
+      infoBtn.style.color = c.count;
     }
     prefersDark.addEventListener('change', () => applyColor(colors()[colorIdx]));
 
@@ -637,4 +890,109 @@
     applyColor(colors()[0]);
     blob.style.width  = BASE_SIZE + 'px';
     blob.style.height = BASE_SIZE + 'px';
+
+    // ── Info panel ───────────────────────────────────────────────
+    infoBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      infoPanel.classList.toggle('open');
+    });
+
+    document.addEventListener('click', e => {
+      if (infoPanel.classList.contains('open') &&
+          !infoPanel.contains(e.target) && e.target !== infoBtn) {
+        infoPanel.classList.remove('open');
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') infoPanel.classList.remove('open');
+    });
+
+    // ── Debug panel ──────────────────────────────────────────────
+    const SHAPE_NAMES = ['circle','organic','pear','diagonal','cross','star','crescent','mushroom','alien','8pt star'];
+
+    const debugPanel = document.createElement('div');
+    debugPanel.id = 'debugPanel';
+    debugPanel.style.cssText = `
+      position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:stretch; gap:8px;
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      padding:12px 14px; border-radius:18px;
+    `;
+
+    // Row 1: stage
+    const row1 = document.createElement('div');
+    row1.style.cssText = 'display:flex; gap:6px; align-items:center;';
+    debugPanel.appendChild(row1);
+
+    const lbl = document.createElement('span');
+    lbl.className = 'dbg-lbl';
+    lbl.textContent = 'stage';
+    row1.appendChild(lbl);
+
+    const debugBtns = document.createElement('div');
+    debugBtns.style.cssText = 'display:flex; gap:4px;';
+    row1.appendChild(debugBtns);
+
+    // Row 2: generation
+    const row2 = document.createElement('div');
+    row2.style.cssText = 'display:flex; gap:6px; align-items:center;';
+    debugPanel.appendChild(row2);
+
+    const genLbl = document.createElement('span');
+    genLbl.className = 'dbg-lbl';
+    genLbl.textContent = 'gen';
+    row2.appendChild(genLbl);
+
+    const genBtns = document.createElement('div');
+    genBtns.style.cssText = 'display:flex; gap:4px;';
+    row2.appendChild(genBtns);
+
+    function updateStageBtns() {
+      debugBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === stage));
+    }
+
+    function updateGenBtns() {
+      genBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === generation));
+    }
+
+    for (let i = 0; i < 10; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'dbg-btn';
+      btn.textContent = i;
+      btn.style.cssText = 'width:26px; height:26px; border-radius:7px;';
+      btn.addEventListener('click', () => {
+        generation = i;
+        applyColor(colors()[colorIdx]);
+        animateBlob(mutatedRadii(stage), 500);
+        updateGenBtns();
+      });
+      genBtns.appendChild(btn);
+    }
+
+    document.body.appendChild(debugPanel);
+    debugPanel.style.display = 'none';
+
+    BLOB_SHAPE_RADII.forEach((radii, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'dbg-btn';
+      btn.textContent = i;
+      btn.title = SHAPE_NAMES[i];
+      btn.style.cssText = 'width:26px; height:26px; border-radius:7px;';
+      btn.addEventListener('click', () => {
+        stage = i;
+        animateBlob(mutatedRadii(i), 500);
+        updateStageBtns();
+      });
+      debugBtns.appendChild(btn);
+    });
+
+    updateStageBtns();
+    updateGenBtns();
+
+    devToggle.addEventListener('change', () => {
+      debugPanel.style.display = devToggle.checked ? 'flex' : 'none';
+    });
   </script>
+</body>
+</html>
