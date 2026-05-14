@@ -399,19 +399,19 @@
         `<path d="M 4 2 L 4 24 L 9 19 L 13 28 L 17 26 L 13 17 L 21 17 Z" fill="white" stroke="${s}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`,
         20, 22, 28, 30
       );
-      // Front-facing open hand, fingers up, thumb on the right.
-      // Paint order: palm → thumb → fingers so each appears to grow naturally from palm.
+      // Front-facing open hand: designed at 178×172, rendered at 34×33.
+      // Thumb on the right. Paint order: thumb → palm → fingers.
       const hand = makeCursorURL(
-        `<rect x="1"  y="16" width="27" height="15" rx="5"   fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="25" y="18" width="8"  height="12" rx="4"   fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="2"  y="2"  width="5"  height="18" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="9"  y="1"  width="5"  height="19" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="16" y="2"  width="5"  height="18" rx="2.5" fill="white" stroke="${s}" stroke-width="2"/>` +
-        `<rect x="23" y="5"  width="4"  height="15" rx="2"   fill="white" stroke="${s}" stroke-width="2"/>`,
-        34, 33
+        `<rect x="130" y="104" width="40" height="56" rx="20" fill="white" stroke="${s}" stroke-width="10"/>` +
+        `<rect x="4"   y="96"  width="141" height="66" rx="22" fill="white" stroke="${s}" stroke-width="10"/>` +
+        `<rect x="8"   y="10"  width="25"  height="102" rx="12" fill="white" stroke="${s}" stroke-width="10"/>` +
+        `<rect x="45"  y="6"   width="25"  height="106" rx="12" fill="white" stroke="${s}" stroke-width="10"/>` +
+        `<rect x="82"  y="10"  width="25"  height="102" rx="12" fill="white" stroke="${s}" stroke-width="10"/>` +
+        `<rect x="119" y="24"  width="21"  height="88"  rx="10" fill="white" stroke="${s}" stroke-width="10"/>`,
+        34, 33, 178, 172
       );
       document.body.style.cursor = `url("${arrow}") 3 1, auto`;
-      wrap.style.cursor = `url("${hand}") 14 23, pointer`;
+      wrap.style.cursor = `url("${hand}") 14 25, pointer`;
     }
     function setCursors(col) {
       const newRGB = _hexToRGB(col.border);
