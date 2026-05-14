@@ -1,12 +1,11 @@
-# Squish — Project Context for Claude Code
+# Blob Squish — Project Context for Claude Code
 
 ## What this is
 A static single-page web app — a blob-squishing clicker game with evolution mechanics. No build process, no framework, no dependencies. Pure HTML, CSS, and vanilla JS.
 
 ## File structure
 ```
-index.html          # Production file — the one that gets deployed
-squish-svg.html     # Development/testing file — includes debug panel
+index.html          # The single production file — the one that gets deployed
 404.html            # Custom 404 page
 favicon.svg         # Browser tab favicon (SVG, scalable)
 favicon-32.png      # Browser tab favicon fallback (32×32 PNG)
@@ -20,18 +19,8 @@ netlify.toml        # Netlify build config (static, no build command)
 CLAUDE.md           # This file
 ```
 
-## Critical rule: two files to keep in sync
-`index.html` and `squish-svg.html` are near-identical. The only difference is:
-- `squish-svg.html` has a **debug panel** at the bottom (stage picker buttons + generation toggle)
-- `index.html` has **meta/OG tags** and correct icon links in the `<head>`
-
-**When making changes, always update both files.** When generating `index.html` from `squish-svg.html`, strip the debug panel (everything from `// ── Debug: stage picker` to the end of the script) and ensure the correct `<head>` tags are present.
-
-The easiest way to verify sync:
-```
-grep -c "blob-area\|GEN_PALETTES\|mutatedRadii\|countpulse\|genLabel" index.html squish-svg.html
-```
-Counts should match between the two files.
+## Debug panel
+`index.html` includes a built-in debug panel (stage picker + generation buttons) hidden behind a **Developer mode** toggle in the info panel (the `i` button, top-left). There is no separate development file.
 
 ## Deployment
 - Hosted at **https://blob-squish.com** via Netlify
@@ -69,7 +58,6 @@ Fully supported via `prefers-color-scheme: dark`. Each colour theme has a `darkP
 ## Known gotchas
 - `colors` is a **function** — always call it as `colors()`, never reference it as an array
 - After any `str_replace` edit, re-view the file before further edits — context goes stale
-- The debug panel in `squish-svg.html` must never appear in `index.html`
 - `apple-touch-icon.png` must have a **solid** background (Apple fills transparency with black)
 - `icon-192.png` and `icon-512.png` have **transparent** backgrounds (Android uses `background_color` from manifest)
 - Netlify's free tier blocks unrecognised Git contributors on private repos — repo is public to avoid this
