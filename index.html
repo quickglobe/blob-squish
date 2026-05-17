@@ -224,7 +224,7 @@
       border-radius: 50%;
       border: none;
       background: rgba(0,0,0,0.08);
-      color: #D4537E;
+      color: #FDF6F9;
       font-family: 'Fredoka One', sans-serif;
       font-size: 19px;
       line-height: 1;
@@ -277,6 +277,7 @@
       .info-panel {
         background: rgba(26,17,32,0.76);
         box-shadow: 0 4px 28px rgba(0,0,0,0.40);
+        color: #fff;
       }
     }
 
@@ -643,7 +644,7 @@
       document.documentElement.style.setProperty('--theme-color', c.border);
       infoPanelTitle.style.color = c.count;
       infoPanelLinks.querySelectorAll('a').forEach(a => a.style.color = c.border);
-      infoBtn.style.color = c.count;
+      infoBtn.style.color = prefersDark.matches ? c.darkPage : c.page;
     }
     prefersDark.addEventListener('change', () => applyColor(colors()[colorIdx]));
 
