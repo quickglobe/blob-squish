@@ -234,13 +234,14 @@
       justify-content: center;
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      transition: background 0.15s, transform 0.15s;
+      transition: background 0.15s, transform 0.15s, opacity 0.3s;
       z-index: 200;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
     .info-btn:hover  { background: rgba(0,0,0,0.14); transform: scale(1.1); }
     .info-btn:active { transform: scale(0.95); }
+    .info-btn.activity-hidden { opacity: 0; pointer-events: none; }
 
     @media (prefers-color-scheme: dark) {
       .info-btn { background: rgba(255,255,255,0.10); }
@@ -576,6 +577,7 @@
     let lastClick = 0;
     let decayTimer = null;
     let blobAnim = null, shadowAnim = null, faceTimer = null, morphAnim = null;
+    let idleTimer = null;
     let currentRadii = [...BLOB_SHAPE_RADII[0]];
 
     function colors() { return GEN_PALETTES[generation % GEN_PALETTES.length]; }
@@ -855,6 +857,9 @@
       decayTimer = setTimeout(decayFrenzy, 500);
       updateFrenzyLabel();
       runSquish();
+      infoBtn.classList.add('activity-hidden');
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => infoBtn.classList.remove('activity-hidden'), 5000);
       hint.classList.add('hidden');
 
       const prevTier = getGrowthTier(count);
