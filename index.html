@@ -197,6 +197,7 @@
       background: currentColor;
       opacity: 0.18;
       transition: opacity 0.3s, transform 0.3s;
+      will-change: transform;
     }
 
     .progress-dot.filled {
@@ -573,7 +574,7 @@
     // ── State ────────────────────────────────────────────────────
     let count = 0, colorIdx = 0;
     let frenzy = 0, stage = 0, generation = 0;
-    let lastClick = 0;
+    let lastClick = 0, lastSpaceSquish = 0;
     let decayTimer = null;
     let blobAnim = null, shadowAnim = null, faceTimer = null, morphAnim = null;
     let currentRadii = [...BLOB_SHAPE_RADII[0]];
@@ -884,7 +885,15 @@
     }
 
     wrap.addEventListener('click', doSquish);
-    document.addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); doSquish(); } });
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        const now = Date.now();
+        if (e.repeat && now - lastSpaceSquish < FRENZY_WINDOW) return;
+        lastSpaceSquish = now;
+        doSquish();
+      }
+    });
 
     // ── Init ─────────────────────────────────────────────────────
     blobPath.setAttribute('d', makeBlob(currentRadii));
