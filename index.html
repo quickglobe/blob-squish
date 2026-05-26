@@ -20,11 +20,6 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --cur-default: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='24' viewBox='0 0 20 24'%3E%3Cpath fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M3 2L3 18L7 14L10 21.5L12.5 20.5L9.5 13.5L16 13.5Z'/%3E%3C/svg%3E") 3 2, auto;
-      --cur-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, pointer;
-    }
-
     body {
       height: 100vh;
       overflow: hidden;
@@ -35,7 +30,6 @@
       font-family: 'Fredoka One', sans-serif;
       transition: background 0.5s ease;
       touch-action: manipulation;
-      cursor: var(--cur-default);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -63,7 +57,6 @@
     }
 
     .blob-wrap {
-      cursor: var(--cur-pointer);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -245,7 +238,6 @@
       z-index: 200;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      cursor: var(--cur-pointer);
     }
     .info-btn:hover  { background: rgba(0,0,0,0.14); transform: scale(1.1); }
     .info-btn:active { transform: scale(0.95); }
@@ -640,6 +632,16 @@
     }
 
     // ── Colour ───────────────────────────────────────────────────
+    function updateCursors(c) {
+      const enc = encodeURIComponent;
+      const arrowSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='24' viewBox='0 0 20 24'><path fill='${c.bg}' stroke='${c.border}' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M3 2L3 18L7 14L10 21.5L12.5 20.5L9.5 13.5L16 13.5Z'/></svg>`;
+      const circleSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><circle cx='12' cy='12' r='9' fill='none' stroke='white' stroke-width='3'/><circle cx='12' cy='12' r='9' fill='none' stroke='${c.border}' stroke-width='2'/></svg>`;
+      document.body.style.cursor = `url("data:image/svg+xml,${enc(arrowSvg)}") 3 2, auto`;
+      const circleCursor = `url("data:image/svg+xml,${enc(circleSvg)}") 12 12, pointer`;
+      wrap.style.cursor = circleCursor;
+      infoBtn.style.cursor = circleCursor;
+    }
+
     function applyColor(c) {
       blobPath.style.fill   = c.bg;
       blobPath.style.stroke = c.border;
@@ -655,6 +657,7 @@
       infoPanelTitle.style.color = c.count;
       infoPanelLinks.querySelectorAll('a').forEach(a => a.style.color = c.border);
       infoBtn.style.color = prefersDark.matches ? c.darkPage : c.page;
+      updateCursors(c);
     }
     prefersDark.addEventListener('change', () => applyColor(colors()[colorIdx]));
 
