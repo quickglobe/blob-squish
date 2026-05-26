@@ -634,8 +634,8 @@
     // ── Colour ───────────────────────────────────────────────────
     function updateCursors(c) {
       const enc = encodeURIComponent;
-      const arrowSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='24' viewBox='0 0 20 24'><path fill='${c.bg}' stroke='${c.border}' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M3 2L3 18L7 14L10 21.5L12.5 20.5L9.5 13.5L16 13.5Z'/></svg>`;
-      const circleSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><circle cx='12' cy='12' r='9' fill='none' stroke='white' stroke-width='3'/><circle cx='12' cy='12' r='9' fill='none' stroke='${c.border}' stroke-width='2'/></svg>`;
+      const arrowSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><path fill='${c.bg}' stroke='${c.border}' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round' d='M3 2L3 16L16 16Z'/></svg>`;
+      const circleSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><circle cx='12' cy='12' r='9' fill='${c.bg}' stroke='${c.border}' stroke-width='2'/></svg>`;
       document.body.style.cursor = `url("data:image/svg+xml,${enc(arrowSvg)}") 3 2, auto`;
       const circleCursor = `url("data:image/svg+xml,${enc(circleSvg)}") 12 12, pointer`;
       wrap.style.cursor = circleCursor;
