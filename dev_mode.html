@@ -325,6 +325,120 @@
       .ext-icon { display: none; }
     }
 
+    .info-divider {
+      border: none;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      margin-bottom: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      .info-divider { border-top-color: rgba(255,255,255,0.08); }
+    }
+
+    .dev-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .dev-row-label {
+      font-family: sans-serif;
+      font-size: 13px;
+      opacity: 0.78;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      background: rgba(0,0,0,0.14);
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    @media (prefers-color-scheme: dark) {
+      .toggle-track { background: rgba(255,255,255,0.14); }
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+    }
+    .toggle input:checked + .toggle-track {
+      background: var(--theme-color, #D4537E);
+    }
+    .toggle input:checked + .toggle-track::after {
+      transform: translateX(18px);
+    }
+
+    /* ── Debug panel ──────────────────────────────────────────── */
+    #debugPanel {
+      background: rgba(10,6,14,0.72);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+    @media (prefers-color-scheme: light) {
+      #debugPanel {
+        background: rgba(255,252,255,0.88);
+        border-color: rgba(0,0,0,0.09);
+        color: #2a1a28;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      }
+    }
+    .dbg-lbl {
+      font: 500 9px/1 monospace;
+      opacity: 0.4;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: 36px;
+    }
+    .dbg-btn {
+      border: 1.5px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      font: 600 11px/1 monospace;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .dbg-btn:hover  { background: rgba(255,255,255,0.14); }
+    .dbg-btn.active {
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.80);
+    }
+    @media (prefers-color-scheme: light) {
+      .dbg-btn {
+        border-color: rgba(0,0,0,0.14);
+        background: rgba(0,0,0,0.04);
+        color: #2a1a28;
+      }
+      .dbg-btn:hover  { background: rgba(0,0,0,0.08); }
+      .dbg-btn.active {
+        background: rgba(0,0,0,0.10);
+        border-color: rgba(0,0,0,0.50);
+      }
+    }
   </style>
 </head>
 <body>
@@ -337,6 +451,14 @@
       <a href="https://github.com/quickglobe/blob-squish" target="_blank" rel="noopener noreferrer">
         GitHub<span class="ext-icon" aria-hidden="true"> ↗</span>
       </a>
+    </div>
+    <hr class="info-divider" />
+    <div class="dev-row">
+      <label class="dev-row-label" for="devToggle">Developer mode</label>
+      <label class="toggle" aria-label="Toggle developer mode">
+        <input type="checkbox" id="devToggle" />
+        <span class="toggle-track"></span>
+      </label>
     </div>
   </div>
 
@@ -387,6 +509,7 @@
     const infoPanel      = document.getElementById('infoPanel');
     const infoPanelTitle = document.getElementById('infoPanelTitle');
     const infoPanelLinks = infoPanel.querySelector('.info-panel-links');
+    const devToggle      = document.getElementById('devToggle');
 
     // ── Colours — same 6 hues in same order, increasing saturation each gen ──
     const GEN_PALETTES = [
@@ -798,6 +921,92 @@
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') infoPanel.classList.remove('open');
+    });
+
+    // ── Debug panel ──────────────────────────────────────────────
+    const SHAPE_NAMES = ['circle','organic','pear','diagonal','cross','star','crescent','mushroom','alien','8pt star'];
+
+    const debugPanel = document.createElement('div');
+    debugPanel.id = 'debugPanel';
+    debugPanel.style.cssText = `
+      position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:stretch; gap:8px;
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      padding:12px 14px; border-radius:18px;
+    `;
+
+    // Row 1: stage
+    const row1 = document.createElement('div');
+    row1.style.cssText = 'display:flex; gap:6px; align-items:center;';
+    debugPanel.appendChild(row1);
+
+    const lbl = document.createElement('span');
+    lbl.className = 'dbg-lbl';
+    lbl.textContent = 'stage';
+    row1.appendChild(lbl);
+
+    const debugBtns = document.createElement('div');
+    debugBtns.style.cssText = 'display:flex; gap:4px;';
+    row1.appendChild(debugBtns);
+
+    // Row 2: generation
+    const row2 = document.createElement('div');
+    row2.style.cssText = 'display:flex; gap:6px; align-items:center;';
+    debugPanel.appendChild(row2);
+
+    const genLbl = document.createElement('span');
+    genLbl.className = 'dbg-lbl';
+    genLbl.textContent = 'gen';
+    row2.appendChild(genLbl);
+
+    const genBtns = document.createElement('div');
+    genBtns.style.cssText = 'display:flex; gap:4px;';
+    row2.appendChild(genBtns);
+
+    function updateStageBtns() {
+      debugBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === stage));
+    }
+
+    function updateGenBtns() {
+      genBtns.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === generation));
+    }
+
+    for (let i = 0; i < 10; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'dbg-btn';
+      btn.textContent = i;
+      btn.style.cssText = 'width:26px; height:26px; border-radius:7px;';
+      btn.addEventListener('click', () => {
+        generation = i;
+        applyColor(colors()[colorIdx]);
+        animateBlob(mutatedRadii(stage), 500);
+        updateGenBtns();
+      });
+      genBtns.appendChild(btn);
+    }
+
+    document.body.appendChild(debugPanel);
+    debugPanel.style.display = 'none';
+
+    BLOB_SHAPE_RADII.forEach((radii, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'dbg-btn';
+      btn.textContent = i;
+      btn.title = SHAPE_NAMES[i];
+      btn.style.cssText = 'width:26px; height:26px; border-radius:7px;';
+      btn.addEventListener('click', () => {
+        stage = i;
+        animateBlob(mutatedRadii(i), 500);
+        updateStageBtns();
+      });
+      debugBtns.appendChild(btn);
+    });
+
+    updateStageBtns();
+    updateGenBtns();
+
+    devToggle.addEventListener('change', () => {
+      debugPanel.style.display = devToggle.checked ? 'flex' : 'none';
     });
   </script>
 </body>
