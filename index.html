@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Blob Squish</title>
   <meta name="description" content="Click the blob and watch it squish!" />
   <meta property="og:title" content="Blob Squish" />
@@ -30,6 +30,11 @@
       font-family: 'Fredoka One', sans-serif;
       transition: background 0.5s ease;
       touch-action: manipulation;
+      /* Fill the screen edge-to-edge (incl. behind the status bar) so the
+         celebration rings can extend into it, but keep the UI content itself
+         inside the safe area via padding. */
+      padding: env(safe-area-inset-top) env(safe-area-inset-right)
+               env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     @media (prefers-color-scheme: dark) {
