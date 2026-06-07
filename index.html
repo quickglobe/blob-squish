@@ -20,9 +20,18 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      height: 100vh;
+    /* Clip scrolling at the root, NOT on <body>. The celebration rings are
+       fixed-position children of <body>; iOS Safari clips fixed descendants to
+       an <body> that has its own overflow context, which cut the rings off at
+       the status bar. Keeping overflow on <html> lets them paint full-screen
+       (incl. behind the translucent status bar, enabled by viewport-fit=cover). */
+    html {
+      height: 100%;
       overflow: hidden;
+    }
+
+    body {
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -30,11 +39,6 @@
       font-family: 'Fredoka One', sans-serif;
       transition: background 0.5s ease;
       touch-action: manipulation;
-      /* Fill the screen edge-to-edge (incl. behind the status bar) so the
-         celebration rings can extend into it, but keep the UI content itself
-         inside the safe area via padding. */
-      padding: env(safe-area-inset-top) env(safe-area-inset-right)
-               env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     @media (prefers-color-scheme: dark) {
